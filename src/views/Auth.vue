@@ -13,7 +13,7 @@
           <div class="column">
             <div class="row text-h5 q-mb-lg justify-center">Login to use the chat-bot</div>
             <div class="row q-mb-lg justify-center">
-              <q-input style="width:70%;" v-model="email" outlined label="Email" />
+              <q-input style="width:70%;" v-model="email" name="email" outlined label="Email" />
             </div>
             <div class="row q-mb-lg justify-center">
               <q-input
@@ -23,6 +23,8 @@
                 label="Password"
                 v-model="password"
                 :type="isPwd ? 'password' : 'text'"
+                @keyup.enter="sendLoginRequest()"
+                name="password"
               >
                 <template v-slot:append>
                   <q-icon
@@ -37,7 +39,7 @@
               <q-btn
                 class="q-mr-sm"
                 style="background: goldenrod; color: white"
-                @click="sendLoginRequest"
+                @click="sendLoginRequest()"
                 label="Login"
                 :disable="queryLoading"
               />
@@ -50,17 +52,31 @@
           <div class="column">
             <div class="row text-h5 q-mb-lg justify-center">Enter your email for signup</div>
             <div class="row q-mb-lg justify-center">
-              <q-input style="width:70%;" outlined label="Email" />
+              <q-input v-model="email" style="width:70%;" name="email2" outlined label="Email" />
             </div>
             <div class="row q-mb-lg justify-center">
-              <q-input class="q-mb-lg" style="width:70%;" outlined label="Password" />
-              <q-input class="q-mb-lg" style="width:70%;" outlined label="Repeat Password" />
+              <q-input
+                v-model="password"
+                class="q-mb-lg"
+                style="width:70%;"
+                outlined
+                label="Password"
+                name="password3"
+              />
+              <q-input
+                class="q-mb-lg"
+                style="width:70%;"
+                outlined
+                label="Repeat Password"
+                @keyup.enter="sendLoginRequest()"
+                name="password4"
+              />
             </div>
             <div class="row q-mb-sm justify-center">
               <q-btn
                 style="background: goldenrod; color: white"
                 label="SignUp"
-                @click="sendSignupRequest"
+                @click="sendSignupRequest()"
                 :disable="queryLoading"
               />
               <q-spinner-pie v-if="queryLoading" style="font-size: 2.5em" color="orange" />
@@ -69,19 +85,34 @@
         </q-tab-panel>
       </q-tab-panels>
     </q-card>
+    <!-- Alert dialog component -->
+    <alert-dialog
+      v-model="alertDialogVisible"
+      :value="Boolean"
+      :type="alertDialogType"
+      :message="alertDialogMessage"
+    />
   </q-page>
 </template>
 
 <script>
+import AlertDialog from "../components/AlertDialog";
+
 export default {
-  name: "ChatUI",
+  name: "Auth",
+  components: {
+    "alert-dialog": AlertDialog
+  },
   data() {
     return {
       tab: "login",
       password: null,
       email: null,
       isPwd: true,
-      queryLoading: false
+      queryLoading: false,
+      alertDialogMessage: null,
+      alertDialogType: null,
+      alertDialogVisible: false
     };
   },
   methods: {
@@ -96,6 +127,14 @@ export default {
     sendSignupRequest() {
       this.sendAuthQueryRequest("signup");
     },
+    showAlertDialog(message, type) {
+      if (type == null) {
+        type = "default";
+      }
+      this.alertDialogMessage = message;
+      this.alertDialogType = type;
+      this.alertDialogVisible = true;
+    },
     sendAuthQueryRequest(url) {
       const self = this;
       this.toggleLoadingState();
@@ -106,16 +145,13 @@ export default {
           password: self.password
         })
         .then(function(response) {
+          self.showAlertDialog(response.data.message, "done");
           // set session cookies
-          if (response.data.userId) {
-            alert(response.data.message);
-            self.$cookies.set("ypUserId", response.data.message);
-          }
-          console.log("TCL: sendLoginRequest -> self", response.data);
+          self.$cookies.set("ypUserId", response.data.message);
           self.toggleLoadingState();
         })
         .catch(function(error) {
-          console.log(error);
+          self.showAlertDialog(error, "error");
           self.toggleLoadingState();
         });
     }

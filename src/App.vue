@@ -42,7 +42,7 @@
         </q-item>
       </q-list>
     </q-drawer>
-
+    <!-- Router page container -->
     <q-page-container>
       <router-view></router-view>
     </q-page-container>
