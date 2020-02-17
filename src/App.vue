@@ -73,7 +73,8 @@ export default {
     },
     logout() {
       this.$cookies.remove("ypUserId");
-      this.$cookies.remove("ypUserId");
+      this.$cookies.remove("ypUserName");
+      this.$cookies.remove("ypChats");
       window.location.href = "/#/auth";
     }
   }
