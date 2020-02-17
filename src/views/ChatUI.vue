@@ -2,7 +2,7 @@
   <q-page class="flex">
     <div class="column justify-between content-between">
       <!-- Chat bubbles scroll area -->
-      <q-scroll-area ref="chatArea" class="col-10 q-mt-sm">
+      <q-scroll-area ref="chatArea" class="col-md-10 q-mt-sm">
         <div class="q-mx-xl row justify-center">
           <div style="width: 100%;" v-for="chat in chats" :key="chat.id">
             <q-chat-message :text="[chat.message]" :sent="chat.sent" />
@@ -36,8 +36,9 @@
               v-model="chatTextInput"
               outlined
               label="Type here..."
-              style="width: 1160px;"
+              style="width: 1150px;"
               @keyup.enter="sendChatMessage()"
+              class="q-mr-sm"
             />
             <q-btn color="red" icon-right="send" label="Send" @click="sendChatMessage()" />
           </div>
@@ -66,12 +67,28 @@ export default {
   },
   created() {
     const userId = this.$cookies.get("ypUserId");
-    console.log("TCL: created -> userId", userId);
+    const userName = this.$cookies.get("ypUserName");
+    let userChats = this.$cookies.get("ypChats");
+    if (userChats) {
+      this.chats = JSON.parse(userChats);
+    }
+    // welcome string
+    const string =
+      userName == "User"
+        ? ", welcome to the pizza ordering bot. start typing and get yourself a pizza."
+        : "";
 
     if (!userId || userId == "") {
       window.location.replace("/#/auth");
     }
 
+    if (this.chats.length < 1) {
+      this.chats.push({
+        message: "Hello " + userName + string,
+        sent: false,
+        urls: null
+      });
+    }
     this.sessionId = Uuid.v4();
     const cartCookies = this.$cookies.get("ypCart");
     if (cartCookies) {
@@ -92,6 +109,7 @@ export default {
     async addItemsToCart(items) {
       this.cart = items;
       this.$cookies.set("ypCart", items.join());
+      this.$emit("cart", items);
     },
     async sendChatMessage(query = null) {
       const self = this;
@@ -132,6 +150,7 @@ export default {
           });
           self.scrollToBottom();
           self.sessionId = response.data.sessionId;
+          self.$cookies.set("ypChats", JSON.stringify(self.chats));
         })
         .catch(function(error) {
           console.log(error);

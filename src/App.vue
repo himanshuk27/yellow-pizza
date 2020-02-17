@@ -12,8 +12,17 @@
         />
 
         <q-toolbar-title>Yello Pizza</q-toolbar-title>
-
-        <div>Demo Assignment</div>
+        <q-btn flat icon="shopping_cart" :label="'Cart('+ shoppingCart.length + ')'">
+          <q-menu transition-show="flip-right" transition-hide="flip-left">
+            <q-list style="min-width: 100px">
+              <q-item v-for="item in shoppingCart" :key="item.id" clickable>
+                <q-item-section>{{ item }}</q-item-section>
+              </q-item>
+              <q-separator />
+            </q-list>
+          </q-menu>
+        </q-btn>
+        <q-btn flat icon="account" label="Logout" @click="logout" />
       </q-toolbar>
     </q-header>
 
@@ -44,7 +53,7 @@
     </q-drawer>
     <!-- Router page container -->
     <q-page-container>
-      <router-view></router-view>
+      <router-view @cart="updateCart"></router-view>
     </q-page-container>
   </q-layout>
 </template>
@@ -54,8 +63,19 @@ export default {
   name: "App",
   data() {
     return {
-      leftDrawerOpen: false
+      leftDrawerOpen: false,
+      shoppingCart: []
     };
+  },
+  methods: {
+    updateCart(cart) {
+      this.shoppingCart = cart;
+    },
+    logout() {
+      this.$cookies.remove("ypUserId");
+      this.$cookies.remove("ypUserId");
+      window.location.href = "/#/auth";
+    }
   }
 };
 </script>

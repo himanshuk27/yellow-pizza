@@ -64,6 +64,7 @@
                 name="password3"
               />
               <q-input
+                v-model="password2"
                 class="q-mb-lg"
                 style="width:70%;"
                 outlined
@@ -107,6 +108,7 @@ export default {
     return {
       tab: "login",
       password: null,
+      password2: null,
       email: null,
       isPwd: true,
       queryLoading: false,
@@ -116,6 +118,30 @@ export default {
     };
   },
   methods: {
+    validateForm() {
+      if (!this.email || !this.password) {
+        this.showAlertDialog(
+          "Please fill required email and password.",
+          "warning"
+        );
+        return false;
+      }
+      return true;
+    },
+    validateForm1() {
+      if (!this.email || !this.password || !this.password2) {
+        this.showAlertDialog(
+          "Please fill required email and password.",
+          "warning"
+        );
+        return false;
+      }
+      if (this.password != this.password2) {
+        this.showAlertDialog("Passwords not matched!", "warning");
+        return false;
+      }
+      return true;
+    },
     toggleLoadingState() {
       this.queryLoading = !this.queryLoading;
     },
@@ -137,6 +163,12 @@ export default {
     },
     sendAuthQueryRequest(url) {
       const self = this;
+
+      const validate = this.validateForm();
+
+      if (!validate) {
+        return;
+      }
       this.toggleLoadingState();
       // axios post request
       this.$api
@@ -148,12 +180,16 @@ export default {
           self.toggleLoadingState();
           if (response.data.error == true) {
             self.showAlertDialog(response.data.message, "error");
-          }
-
-          // set session cookies
-          self.$cookies.set("ypUserId", response.data.userId);
-          if (response.data.message == "success") {
-            window.location.replace("/#/");
+          } else {
+            const userId = response.data.userId;
+            const userName = response.data.userName;
+            self.showAlertDialog(response.data.message, "success");
+            if (userId && userId != "") {
+              // set session cookies
+              self.$cookies.set("ypUserId", userId);
+              self.$cookies.set("ypUserName", userName);
+              window.location.replace("/#/");
+            }
           }
         })
         .catch(function(error) {
@@ -164,7 +200,6 @@ export default {
   },
   created() {
     const userId = this.$cookies.get("ypUserId");
-    console.log("Auth: created -> userId", userId);
     if (userId && userId != "") {
       window.location.replace("/#/");
     }
