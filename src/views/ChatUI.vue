@@ -101,10 +101,12 @@ export default {
       this.queryLoading = !this.queryLoading;
     },
     scrollToBottom() {
-      this.$refs.chatArea.setScrollPosition(
-        this.$refs.chatArea.$el.scrollHeight,
-        1
-      );
+      if (this.$refs.chatArea) {
+        this.$refs.chatArea.setScrollPosition(
+          this.$refs.chatArea.$el.scrollHeight,
+          1
+        );
+      }
     },
     async addItemsToCart(items) {
       this.cart = items;
