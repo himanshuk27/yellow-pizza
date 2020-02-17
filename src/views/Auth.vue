@@ -145,15 +145,24 @@ export default {
           password: self.password
         })
         .then(function(response) {
+          self.toggleLoadingState();
           self.showAlertDialog(response.data.message, "done");
           // set session cookies
-          self.$cookies.set("ypUserId", response.data.message);
-          self.toggleLoadingState();
+          self.$cookies.set("ypUserId", response.data.userId);
+          if (response.data.message == "success") {
+            window.location.replace("/#/");
+          }
         })
         .catch(function(error) {
           self.showAlertDialog(error, "error");
           self.toggleLoadingState();
         });
+    }
+  },
+  created() {
+    const userId = this.$cookies.get("ypUserId");
+    if (userId != null && userId != "") {
+      window.location.replace("/#/");
     }
   }
 };

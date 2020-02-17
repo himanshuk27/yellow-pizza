@@ -75,28 +75,39 @@ export default {
         1
       );
     },
-    async sendChatMessage() {
+    async sendChatMessage(flag = null) {
       const self = this;
+      const userId = this.$cookies.get("ypUserId");
+      let inputQuery = flag;
 
-      this.chats.push({
-        message: this.chatTextInput,
-        sent: true
-      });
+      if (!flag) {
+        this.chats.push({
+          message: this.chatTextInput,
+          sent: true
+        });
+        inputQuery = this.chatTextInput;
+      }
 
       this.toggleLoadingState();
 
       this.$api
         .post("send", {
-          query: this.chatTextInput,
-          sessionId: this.sessionId
+          query: inputQuery,
+          sessionId: this.sessionId,
+          userId
         })
         .then(function(response) {
           self.chatTextInput = null;
-          self.chats.push({
-            message: response.data.message,
-            sent: false,
-            urls: response.data.image
-          });
+          if (response.data.message != "") {
+            self.chats.push({
+              message: response.data.message,
+              sent: false,
+              urls: response.data.image
+            });
+          }
+          if (response.data.eventFlag == "CollectUserName") {
+            self.sendChatMessage(response.data.eventFlag);
+          }
           self.scrollToBottom();
           self.sessionId.response.data.sessionId;
         })
