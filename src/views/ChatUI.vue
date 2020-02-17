@@ -157,6 +157,11 @@ export default {
         .catch(function(error) {
           console.log(error);
           self.toggleLoadingState();
+          self.chats.push({
+            message: "Fatal Error: Unable to connect to backend server.",
+            sent: false,
+            urls: null
+          });
         });
     }
   }
