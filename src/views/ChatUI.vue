@@ -10,8 +10,9 @@
             <div v-if="chat.urls" :scrollFunction="scrollToBottom()">
               <div class="q-pa-md">
                 <div class="q-col-gutter-md row items-start">
-                  <div class="col-1" v-for="url in chat.urls" :key="url.id">
+                  <div class="col-1" v-for="(url, pizzaName) in chat.urls" :key="pizzaName">
                     <q-img :src="url"></q-img>
+                    {{ pizzaName }}
                   </div>
                 </div>
               </div>
@@ -59,11 +60,24 @@ export default {
       queryLoading: false,
       chatTextInput: null,
       sessionId: null,
-      chats: []
+      chats: [],
+      cart: []
     };
   },
   created() {
+    const userId = this.$cookies.get("ypUserId");
+    console.log("TCL: created -> userId", userId);
+
+    if (!userId || userId == "") {
+      window.location.replace("/#/auth");
+    }
+
     this.sessionId = Uuid.v4();
+    const cartCookies = this.$cookies.get("ypCart");
+    if (cartCookies) {
+      const cartItems = cartCookies.split(",");
+      this.cart = Object.values(cartItems);
+    }
   },
   methods: {
     toggleLoadingState() {
@@ -75,12 +89,20 @@ export default {
         1
       );
     },
-    async sendChatMessage(flag = null) {
+    async addItemsToCart(items) {
+      this.cart = items;
+      this.$cookies.set("ypCart", items.join());
+    },
+    async sendChatMessage(query = null) {
       const self = this;
       const userId = this.$cookies.get("ypUserId");
-      let inputQuery = flag;
+      let inputQuery = query;
 
-      if (!flag) {
+      if (!this.chatTextInput || this.chatTextInput == "") {
+        return;
+      }
+
+      if (!query) {
         this.chats.push({
           message: this.chatTextInput,
           sent: true
@@ -94,22 +116,22 @@ export default {
         .post("send", {
           query: inputQuery,
           sessionId: this.sessionId,
-          userId
+          userId,
+          cartItems: this.cart
         })
         .then(function(response) {
+          self.toggleLoadingState();
+          if (response.data.cartItems) {
+            self.addItemsToCart(response.data.cartItems);
+          }
           self.chatTextInput = null;
-          if (response.data.message != "") {
-            self.chats.push({
-              message: response.data.message,
-              sent: false,
-              urls: response.data.image
-            });
-          }
-          if (response.data.eventFlag == "CollectUserName") {
-            self.sendChatMessage(response.data.eventFlag);
-          }
+          self.chats.push({
+            message: response.data.message,
+            sent: false,
+            urls: response.data.image
+          });
           self.scrollToBottom();
-          self.sessionId.response.data.sessionId;
+          self.sessionId = response.data.sessionId;
         })
         .catch(function(error) {
           console.log(error);

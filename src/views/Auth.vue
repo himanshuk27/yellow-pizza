@@ -146,7 +146,10 @@ export default {
         })
         .then(function(response) {
           self.toggleLoadingState();
-          self.showAlertDialog(response.data.message, "done");
+          if (response.data.error == true) {
+            self.showAlertDialog(response.data.message, "error");
+          }
+
           // set session cookies
           self.$cookies.set("ypUserId", response.data.userId);
           if (response.data.message == "success") {
@@ -161,7 +164,8 @@ export default {
   },
   created() {
     const userId = this.$cookies.get("ypUserId");
-    if (userId != null && userId != "") {
+    console.log("Auth: created -> userId", userId);
+    if (userId && userId != "") {
       window.location.replace("/#/");
     }
   }

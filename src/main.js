@@ -10,6 +10,8 @@ Vue.config.productionTip = false;
 
 Vue.use(VueCookies);
 
+Vue.$cookies.config("1h");
+
 Vue.use({
   install(Vue) {
     Vue.prototype.$api = axios.create({
