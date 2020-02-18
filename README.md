@@ -1,6 +1,7 @@
 # Yello Pizza Frontend
 
-> Short blurb about what your product does.
+> Live Url- https://yellow-pizza-dlxpvf.firebaseapp.com/
+> Signup with dummy email to test
 
 [![NPM Version][npm-image]][npm-url]
 [![Build Status][travis-image]][travis-url]
