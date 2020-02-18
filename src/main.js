@@ -16,7 +16,7 @@ Vue.$cookies.config("1h");
 Vue.use({
   install(Vue) {
     Vue.prototype.$api = axios.create({
-      baseURL: process.env.BACKEND_API_URL
+      baseURL: "https://yellow-backend.herokuapp.com/"
     });
   }
 });
