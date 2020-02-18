@@ -3,11 +3,13 @@
 > Live Url- https://yellow-pizza-dlxpvf.firebaseapp.com/
 > Signup with dummy email to test
 
-[![NPM Version][npm-image]][npm-url]
-[![Build Status][travis-image]][travis-url]
-[![Downloads Stats][npm-downloads]][npm-url]
-
 A elegent chat bot which helps you in ordering your pizza.
+
+## Application Flow
+* Main AI engine behind this chat bot is Google's DialogFlow api.
+* User input is passed to backend server the it is passed to dialogflow for response.
+* Before giving response dialogflow may post to webhook request on backend server for data.
+* After completing fulfillment dialogflow return the response to the backend server which pass it to frontend.
 
 ![](ss.jpg)
 
