@@ -22,7 +22,7 @@
             </q-list>
           </q-menu>
         </q-btn>
-        <q-btn flat icon="account" label="Logout" @click="logout" />
+        <q-btn flat small label="Logout" @click="logout" />
       </q-toolbar>
     </q-header>
 

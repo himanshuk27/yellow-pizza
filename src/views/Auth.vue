@@ -56,22 +56,40 @@
             </div>
             <div class="row q-mb-lg justify-center">
               <q-input
-                v-model="password"
                 class="q-mb-lg"
                 style="width:70%;"
                 outlined
                 label="Password"
+                v-model="password"
+                :type="isPwd ? 'password' : 'text'"
                 name="password3"
-              />
+              >
+                <template v-slot:append>
+                  <q-icon
+                    :name="isPwd ? 'visibility_off' : 'visibility'"
+                    class="cursor-pointer"
+                    @click="isPwd = !isPwd"
+                  />
+                </template>
+              </q-input>
               <q-input
-                v-model="password2"
                 class="q-mb-lg"
                 style="width:70%;"
                 outlined
                 label="Repeat Password"
+                v-model="password2"
+                :type="isPwd ? 'password' : 'text'"
                 @keyup.enter="sendLoginRequest()"
                 name="password4"
-              />
+              >
+                <template v-slot:append>
+                  <q-icon
+                    :name="isPwd ? 'visibility_off' : 'visibility'"
+                    class="cursor-pointer"
+                    @click="isPwd = !isPwd"
+                  />
+                </template>
+              </q-input>
             </div>
             <div class="row q-mb-sm justify-center">
               <q-btn
@@ -147,10 +165,20 @@ export default {
     },
     // send login query to backend server
     sendLoginRequest() {
+      const validate = this.validateForm();
+
+      if (!validate) {
+        return;
+      }
       this.sendAuthQueryRequest("login");
     },
     // send signup query to backend server
     sendSignupRequest() {
+      const validate = this.validateForm1();
+
+      if (!validate) {
+        return;
+      }
       this.sendAuthQueryRequest("signup");
     },
     showAlertDialog(message, type) {
@@ -163,12 +191,6 @@ export default {
     },
     sendAuthQueryRequest(url) {
       const self = this;
-
-      const validate = this.validateForm();
-
-      if (!validate) {
-        return;
-      }
       this.toggleLoadingState();
       // axios post request
       this.$api
