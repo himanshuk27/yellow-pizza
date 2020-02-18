@@ -2,7 +2,7 @@
 
 > Live Url- https://yellow-pizza-dlxpvf.firebaseapp.com/
 
-> Signup with dummy email to test
+> Signup with any email to test
 
 A elegent chat bot which helps you in ordering your pizza.
 
@@ -13,6 +13,10 @@ A elegent chat bot which helps you in ordering your pizza.
 * After completing fulfillment dialogflow return the response to the backend server which pass it to frontend.
 
 ![](ss.jpg)
+
+
+## Tech Stack
+> NodeJs, ExpressJS, VueJS, DialogFlow, Firebase Firestore, Quasar Framework, Deployed on hereko and Firebase static hosting.
 
 ## Installation
 
