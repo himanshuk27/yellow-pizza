@@ -48,3 +48,5 @@ npm run serve
 - Responsive design
 - Natural Language Processing
 - Context processing
+- Collect user details from chat
+- track order from chat
