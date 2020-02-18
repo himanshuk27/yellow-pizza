@@ -67,16 +67,10 @@ export default {
   },
   created() {
     const userId = this.$cookies.get("ypUserId");
-    const userName = this.$cookies.get("ypUserName");
     let userChats = this.$cookies.get("ypChats");
     if (userChats) {
       this.chats = JSON.parse(userChats);
     }
-    // welcome string
-    const string =
-      userName == "User"
-        ? ", welcome to the pizza ordering bot. start typing and get yourself a pizza."
-        : "";
 
     if (!userId || userId == "") {
       window.location.replace("/#/auth");
@@ -84,7 +78,7 @@ export default {
 
     if (this.chats.length < 1) {
       this.chats.push({
-        message: "Hello " + userName + string,
+        message: "Hello user, you can start by asking for menu",
         sent: false,
         urls: null
       });
