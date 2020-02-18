@@ -1,3 +1,4 @@
+require("dotenv").config();
 import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
@@ -15,7 +16,7 @@ Vue.$cookies.config("1h");
 Vue.use({
   install(Vue) {
     Vue.prototype.$api = axios.create({
-      baseURL: "http://localhost:3000/"
+      baseURL: process.env.BACKEND_API_URL
     });
   }
 });
