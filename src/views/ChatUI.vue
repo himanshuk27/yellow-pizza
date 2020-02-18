@@ -148,8 +148,7 @@ export default {
           self.sessionId = response.data.sessionId;
           self.$cookies.set("ypChats", JSON.stringify(self.chats));
         })
-        .catch(function(error) {
-          console.log(error);
+        .catch(function() {
           self.toggleLoadingState();
           self.chats.push({
             message: "Fatal Error: Unable to connect to backend server.",
