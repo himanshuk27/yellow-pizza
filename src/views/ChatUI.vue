@@ -1,55 +1,72 @@
 <template>
   <q-page class="flex">
-    <div class="column justify-between content-between">
-      <!-- Chat bubbles scroll area -->
-      <q-scroll-area ref="chatArea" class="col-md-10 q-mt-sm">
-        <div class="q-mx-xl row justify-center">
-          <div style="width: 100%;" v-for="chat in chats" :key="chat.id">
-            <q-chat-message :text="[chat.message]" :sent="chat.sent" />
-            <!-- Chat pics div -->
-            <div v-if="chat.urls" :scrollFunction="scrollToBottom()">
-              <div class="q-pa-md">
-                <div class="q-col-gutter-md row items-start">
-                  <div class="col-1" v-for="(url, pizzaName) in chat.urls" :key="pizzaName">
-                    <q-img :src="url"></q-img>
-                    {{ pizzaName }}
+    <div class="col">
+      <div class="row q-pa-sm">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+          <!-- Chat bubbles scroll area -->
+          <q-scroll-area
+            ref="chatArea"
+            class="q-pa-sm"
+            style="height:78vh; max-height:95%"
+          >
+            <div v-for="chat in chats" :key="chat.id">
+              <q-chat-message :text="[chat.message]" :sent="chat.sent" />
+              <!-- Chat pics div -->
+              <div v-if="chat.urls" :scrollFunction="scrollToBottom()">
+                <div class="q-pa-md">
+                  <div class="q-col-gutter-md row items-start">
+                    <div
+                      class="col-1"
+                      v-for="(url, pizzaName) in chat.urls"
+                      :key="pizzaName"
+                    >
+                      <q-img :src="url"></q-img>
+                      {{ pizzaName }}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+            <!-- loading chat bubble div -->
+            <q-chat-message
+              v-if="queryLoading == true"
+              text-color="white"
+              bg-color="primary"
+            >
+              <q-spinner-dots size="2rem" />
+            </q-chat-message>
+          </q-scroll-area>
         </div>
-        <!-- loading chat bubble div -->
-        <q-chat-message
-          v-if="queryLoading == true"
-          class="q-ml-xl"
-          text-color="white"
-          bg-color="primary"
-        >
-          <q-spinner-dots size="2rem" />
-        </q-chat-message>
-      </q-scroll-area>
-      <q-card flat bordered class="row">
-        <q-card-section>
-          <div class="row">
-            <q-input
-              v-model="chatTextInput"
-              outlined
-              label="Type here..."
-              style="width: 1150px;"
-              @keyup.enter="sendChatMessage()"
-              class="q-mr-sm"
-            />
-            <q-btn color="red" icon-right="send" label="Send" @click="sendChatMessage()" />
-          </div>
-        </q-card-section>
-      </q-card>
+      </div>
+      <div class="row q-pa-sm">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+          <q-card flat bordered>
+            <q-card-section>
+              <div class="row justify-between">
+                <q-input
+                  v-model="chatTextInput"
+                  outlined
+                  label="Type here..."
+                  style="max-width:80%; width:130vh;"
+                  @keyup.enter="sendChatMessage()"
+                  class="q-mr-sm"
+                />
+                <q-btn
+                  color="red"
+                  icon-right="send"
+                  label="Send"
+                  @click="sendChatMessage()"
+                />
+              </div>
+            </q-card-section>
+          </q-card>
+        </div>
+      </div>
     </div>
   </q-page>
 </template>
 
-<style>
-</style>
+<style></style>
 
 <script>
 import Uuid from "uuid";

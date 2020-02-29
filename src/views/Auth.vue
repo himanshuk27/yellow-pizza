@@ -1,105 +1,134 @@
 <template>
   <q-page class="flex flex-center">
-    <q-card class="my-card">
+    <!-- Login Card -->
+    <q-card class="auth-card">
+      <q-card-section>
+        <div class="row text-h6 justify-center">
+          Login to use the chat-bot
+        </div>
+      </q-card-section>
+      <!-- Login card tab -->
       <q-tabs v-model="tab" class="text-teal">
         <q-tab label="Login" name="login" />
-        <q-tab label="SignUp" name="signup" />
+        <q-tab label="Signup" name="signup" />
       </q-tabs>
 
       <q-separator />
-
       <q-tab-panels v-model="tab" animated>
+        <!-- Login tab content -->
         <q-tab-panel name="login">
-          <div class="column">
-            <div class="row text-h5 q-mb-lg justify-center">Login to use the chat-bot</div>
-            <div class="row q-mb-lg justify-center">
-              <q-input style="width:70%;" v-model="email" name="email" outlined label="Email" />
-            </div>
-            <div class="row q-mb-lg justify-center">
-              <q-input
-                class="q-mb-lg"
-                style="width:70%;"
-                outlined
-                label="Password"
-                v-model="password"
-                :type="isPwd ? 'password' : 'text'"
-                @keyup.enter="sendLoginRequest()"
-                name="password"
-              >
-                <template v-slot:append>
-                  <q-icon
-                    :name="isPwd ? 'visibility_off' : 'visibility'"
-                    class="cursor-pointer"
-                    @click="isPwd = !isPwd"
-                  />
-                </template>
-              </q-input>
-            </div>
-            <div class="row q-mb-sm justify-center">
-              <q-btn
-                class="q-mr-sm"
-                style="background: goldenrod; color: white"
-                @click="sendLoginRequest()"
-                label="Login"
-                :disable="queryLoading"
-              />
-              <q-spinner-pie v-if="queryLoading" style="font-size: 2.5em" color="orange" />
-            </div>
+          <!-- email input -->
+          <div class="row justify-center q-mt-lg q-mb-lg">
+            <q-input
+              style="width:70%;"
+              v-model="email"
+              name="email"
+              outlined
+              label="Email"
+            />
+          </div>
+          <!-- password input -->
+          <div class="row justify-center q-mb-lg">
+            <q-input
+              class="q-mb-lg"
+              style="width:70%;"
+              outlined
+              label="Password"
+              v-model="password"
+              :type="isPwd ? 'password' : 'text'"
+              @keyup.enter="sendLoginRequest()"
+            >
+              <template v-slot:append>
+                <q-icon
+                  :name="isPwd ? 'visibility_off' : 'visibility'"
+                  class="cursor-pointer"
+                  @click="isPwd = !isPwd"
+                />
+              </template>
+            </q-input>
+          </div>
+          <!-- login button -->
+          <div class="row justify-center">
+            <q-btn
+              class="q-mr-sm"
+              style="background: goldenrod; color: white"
+              @click="sendLoginRequest()"
+              label="Login"
+              :disable="queryLoading"
+            />
+            <q-spinner-pie
+              v-if="queryLoading"
+              style="font-size: 2.5em"
+              color="orange"
+            />
           </div>
         </q-tab-panel>
-
+        <!-- signup tab -->
         <q-tab-panel name="signup">
-          <div class="column">
-            <div class="row text-h5 q-mb-lg justify-center">Enter your email for signup</div>
-            <div class="row q-mb-lg justify-center">
-              <q-input v-model="email" style="width:70%;" name="email2" outlined label="Email" />
-            </div>
-            <div class="row q-mb-lg justify-center">
-              <q-input
-                class="q-mb-lg"
-                style="width:70%;"
-                outlined
-                label="Password"
-                v-model="password"
-                :type="isPwd ? 'password' : 'text'"
-                name="password3"
-              >
-                <template v-slot:append>
-                  <q-icon
-                    :name="isPwd ? 'visibility_off' : 'visibility'"
-                    class="cursor-pointer"
-                    @click="isPwd = !isPwd"
-                  />
-                </template>
-              </q-input>
-              <q-input
-                class="q-mb-lg"
-                style="width:70%;"
-                outlined
-                label="Repeat Password"
-                v-model="password2"
-                :type="isPwd ? 'password' : 'text'"
-                @keyup.enter="sendLoginRequest()"
-                name="password4"
-              >
-                <template v-slot:append>
-                  <q-icon
-                    :name="isPwd ? 'visibility_off' : 'visibility'"
-                    class="cursor-pointer"
-                    @click="isPwd = !isPwd"
-                  />
-                </template>
-              </q-input>
-            </div>
-            <div class="row q-mb-sm justify-center">
-              <q-btn
-                style="background: goldenrod; color: white"
-                label="SignUp"
-                @click="sendSignupRequest()"
-                :disable="queryLoading"
-              />
-              <q-spinner-pie v-if="queryLoading" style="font-size: 2.5em" color="orange" />
-            </div>
+          <!-- email input -->
+          <div class="row justify-center q-mt-lg q-mb-lg">
+            <q-input
+              v-model="email"
+              style="width:70%;"
+              name="email2"
+              outlined
+              label="Email"
+            />
+          </div>
+          <!-- password 1 input -->
+          <div class="row justify-center">
+            <q-input
+              class="q-mb-sm"
+              style="width:70%;"
+              outlined
+              label="Password"
+              v-model="password2"
+              :type="isPwd ? 'password' : 'text'"
+              name="password3"
+            >
+              <template v-slot:append>
+                <q-icon
+                  :name="isPwd ? 'visibility_off' : 'visibility'"
+                  class="cursor-pointer"
+                  @click="isPwd = !isPwd"
+                />
+              </template>
+            </q-input>
+          </div>
+          <div class="row justify-center">
+            <!-- password 2 input -->
+            <q-input
+              class="q-mb-lg"
+              style="width:70%;"
+              outlined
+              label="Repeat Password"
+              v-model="password3"
+              :type="isPwd ? 'password' : 'text'"
+              @keyup.enter="sendSignupRequest()"
+              name="password4"
+            >
+              <template v-slot:append>
+                <q-icon
+                  :name="isPwd ? 'visibility_off' : 'visibility'"
+                  class="cursor-pointer"
+                  @click="isPwd = !isPwd"
+                />
+              </template>
+            </q-input>
+          </div>
+          <!-- signup button -->
+          <div class="row justify-center">
+            <q-btn
+              style="background: goldenrod; color: white"
+              label="SignUp"
+              @click="sendSignupRequest()"
+              :disable="queryLoading"
+            />
+            <q-spinner-pie
+              v-if="queryLoading"
+              style="font-size: 2.5em"
+              color="orange"
+            />
           </div>
         </q-tab-panel>
       </q-tab-panels>
@@ -127,6 +156,7 @@ export default {
       tab: "login",
       password: null,
       password2: null,
+      password3: null,
       email: null,
       isPwd: true,
       queryLoading: false,
@@ -147,14 +177,14 @@ export default {
       return true;
     },
     validateForm1() {
-      if (!this.email || !this.password || !this.password2) {
+      if (!this.email || !this.password2 || !this.password3) {
         this.showAlertDialog(
           "Please fill required email and password.",
           "warning"
         );
         return false;
       }
-      if (this.password != this.password2) {
+      if (this.password2 != this.password3) {
         this.showAlertDialog("Passwords not matched!", "warning");
         return false;
       }
@@ -170,7 +200,7 @@ export default {
       if (!validate) {
         return;
       }
-      this.sendAuthQueryRequest("login");
+      this.sendAuthQueryRequest();
     },
     // send signup query to backend server
     sendSignupRequest() {
@@ -179,7 +209,7 @@ export default {
       if (!validate) {
         return;
       }
-      this.sendAuthQueryRequest("signup");
+      this.sendAuthQueryRequest(true);
     },
     showAlertDialog(message, type) {
       if (type == null) {
@@ -189,14 +219,16 @@ export default {
       this.alertDialogType = type;
       this.alertDialogVisible = true;
     },
-    sendAuthQueryRequest(url) {
+    sendAuthQueryRequest(signup = false) {
       const self = this;
       this.toggleLoadingState();
+      const url = signup ? "/auth/signup" : "/auth/login";
+      const password = signup ? this.password3 : this.password;
       // axios post request
       this.$api
-        .post("auth/" + url, {
+        .post(url, {
           email: self.email,
-          password: self.password
+          password
         })
         .then(function(response) {
           self.toggleLoadingState();
@@ -229,6 +261,11 @@ export default {
 };
 </script>
 <style lang="sass" scoped>
-.my-card
-  width: 40%
+.auth-card
+  width: 80%
+  max-width: 600px
+
+.text-input
+  width: 100%
+  max-width: 400px
 </style>
